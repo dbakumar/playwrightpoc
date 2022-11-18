@@ -12,7 +12,7 @@ const records = parse(fs.readFileSync(path.join(__dirname, '/../data/participant
 
 for (const record of records) {
    if (record != undefined) {
-test('NCI DEV Account Signup', async ({ page }) => {
+test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
   // Recording...
   let randomval= Math.floor(Math.random()*90000) + 10000;
   let tempEmail = record.firstname +randomval+'@mailinator.com';
