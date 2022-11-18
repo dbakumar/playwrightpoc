@@ -1,9 +1,21 @@
+import fs from 'fs';
+import path from 'path';
+import { parse } from 'csv-parse/sync';
+
 import { test, expect } from '@playwright/test';
 
+const records = parse(fs.readFileSync(path.join(__dirname, '/../data/participant.csv')), {
+  columns: true,
+  skip_empty_lines: true
+});
+
+
+for (const record of records) {
+   if (record != undefined) {
 test('NCI DEV Account Signup', async ({ page }) => {
   // Recording...
   let randomval= Math.floor(Math.random()*90000) + 10000;
-  let tempEmail = 'hphenry11182022001'+randomval+'@mailinator.com';
+  let tempEmail = record.firstname +randomval+'@mailinator.com';
 
   await page.goto('https://episphere.github.io/connectApp/#');
   await page.locator('#testingAccessCode').click();
@@ -28,7 +40,6 @@ test('NCI DEV Account Signup', async ({ page }) => {
   const [page2] = await Promise.all([
     page.waitForEvent('popup'),
     page.locator('#pills-links-content a').click()
-    //page.getByRole('link', { name: 'https://episphere.github.io/connectApp/?apiKey=AIzaSyCoz1UxNYE53ujAkXysPTSEA-IDU9utcNQ&mode=signIn&oobCode=oeHkp-mMk1efQgw1rLLaEOnhkkspGFdK4fGhJDwr4_MAAAGEi9NUvg&continueUrl=https://episphere.github.io/connectApp/?ui_sid%3D5HtHa5S81zFcWKCF1pxscShBQ3mBuifF%26ui_sd%3D0&lang=en&utm_source=sendgrid.com&utm_medium=email&utm_campaign=website#' }).click()
   ]);
   await page2.getByRole('textbox').fill(tempEmail);
   await page2.getByRole('button', { name: 'Next' }).click();
@@ -50,29 +61,17 @@ test('NCI DEV Account Signup', async ({ page }) => {
   await page2.locator('#consentIndigenousNo').check();
   await page2.getByRole('button', { name: 'Next' }).click();
   await page2.locator('#CSConsentYesCheck').check();
-  await page2.locator('#CSFirstName').click();
-  await page2.locator('#CSFirstName').fill('hphenry11182022');
-  await page2.locator('#CSFirstName').dblclick();
-  await page2.locator('#CSFirstName').press('End');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').press('Shift+ArrowLeft');
-  await page2.locator('#CSFirstName').fill('hphenry');
+  await page2.locator('#CSFirstName').fill(record.firstname);
   await page2.locator('#CSFirstName').press('Tab');
   await page2.locator('#CSMiddleName').press('Tab');
-  await page2.locator('#CSLastName').fill('mailinator');
+  await page2.locator('#CSLastName').fill(record.lastname);
   await page2.getByRole('button', { name: 'Submit' }).click();
   await page2.getByRole('button', { name: 'Next' }).click();
   await page2.getByRole('button', { name: 'Next' }).click();
-  await page2.locator('#UPMonth').selectOption('01');
-  await page2.locator('#UPDay').selectOption('01');
+  await page2.locator('#UPMonth').selectOption(record.dob.split("/")[0]);
+  await page2.locator('#UPDay').selectOption(record.dob.split("/")[1]);
   await page2.getByPlaceholder('Enter birth year').click();
-  await page2.getByPlaceholder('Enter birth year').fill('1956');
+  await page2.getByPlaceholder('Enter birth year').fill(record.dob.split("/")[2]);
   await page2.locator('#userProfileForm div').filter({ hasText: 'Year *' }).first().click();
   await page2.getByPlaceholder('Enter birth year').click();
   await page2.getByPlaceholder('Enter birth year').fill('1976');
@@ -116,4 +115,7 @@ test('NCI DEV Account Signup', async ({ page }) => {
   await page2.locator('#confirmReview').click();
   await page.waitForTimeout(5000);
   await page2.getByRole('link', { name: ' Sign Out' }).click();
-});
+  
+}); 
+}
+}
