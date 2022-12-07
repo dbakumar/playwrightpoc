@@ -6,8 +6,8 @@ on:
         type: choice
         description: Please select NCI Env
         options:
-        - DEV
-        - STAGE
+        - tests/ncidevsignup.spec.ts
+        - tests/nciSTAGEsignup.spec.ts
 jobs:
   test:
     timeout-minutes: 60
