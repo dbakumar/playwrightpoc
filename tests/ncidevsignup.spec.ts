@@ -18,12 +18,14 @@ test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
   let tempEmail = record.firstname +randomval+'@mailinator.com';
 
   await page.goto('https://episphere.github.io/connectApp/#');
+  //await page.goto('https://myconnect-stage.cancer.gov/');
   await page.locator('#testingAccessCode').click();
   await page.waitForTimeout(2000);
   await page.locator('#testingAccessCode').focus();
   await page.keyboard.type('agree');
   await page.waitForTimeout(3000);
   await page.locator('#warningCloseBtn').click();
+  await page.screenshot({ path: 'screenshot1.png' });
   await page.getByRole('button', { name: 'Create Account' }).click();
   await page.getByRole('button', { name: 'Sign up with email' }).click();
   await page.getByRole('textbox').click();
@@ -42,6 +44,7 @@ test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
     page.locator('#pills-links-content a').click()
   ]);
   await page2.getByRole('textbox').fill(tempEmail);
+  await page.screenshot({ path: 'screenshot2.png' });
   await page2.getByRole('button', { name: 'Next' }).click();
   await page2.getByRole('button', { name: 'I do not have a PIN' }).click();
   await page2.getByRole('combobox', { name: 'Who is your healthcare provider? Healthcare provider is required *' }).selectOption('531629870');
@@ -65,6 +68,7 @@ test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
   await page2.locator('#CSFirstName').press('Tab');
   await page2.locator('#CSMiddleName').press('Tab');
   await page2.locator('#CSLastName').fill(record.lastname);
+  await page.screenshot({ path: 'screenshot3.png' });
   await page2.getByRole('button', { name: 'Submit' }).click();
   await page2.getByRole('button', { name: 'Next' }).click();
   await page2.getByRole('button', { name: 'Next' }).click();
@@ -73,8 +77,8 @@ test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
   await page2.getByPlaceholder('Enter birth year').click();
   await page2.getByPlaceholder('Enter birth year').fill(record.dob.split("/")[2]);
   await page2.locator('#userProfileForm div').filter({ hasText: 'Year *' }).first().click();
-  await page2.getByPlaceholder('Enter birth year').click();
-  await page2.getByPlaceholder('Enter birth year').fill('1976');
+  //await page2.getByPlaceholder('Enter birth year').click();
+  //await page2.getByPlaceholder('Enter birth year').fill('1976');
   await page2.locator('#userProfileForm div').filter({ hasText: 'Preferred Email *' }).first().click();
   await page2.getByPlaceholder('abc@mail.com').click();
   await page2.getByPlaceholder('abc@mail.com').fill('hphenry@mailinator.com');
@@ -113,6 +117,7 @@ test('NCI DEV Account Signup For '+ record.firstname , async ({ page }) => {
   await page2.getByRole('button', { name: 'Submit' }).click();
   await page.waitForTimeout(2000);
   await page2.locator('#confirmReview').click();
+  await page.screenshot({ path: 'screenshot4.png' });
   await page.waitForTimeout(5000);
   await page2.getByRole('link', { name: ' Sign Out' }).click();
   
