@@ -1,9 +1,13 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      NCIEnv:
+        type: choice
+        description: Please select NCI Env
+        options:
+        - DEV
+        - STAGE
 jobs:
   test:
     timeout-minutes: 60
@@ -18,7 +22,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --workers 3
+      run: npx playwright test --workers 3 --browser "chromium"
     - uses: actions/upload-artifact@v3
       if: always()
       with:
